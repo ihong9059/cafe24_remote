@@ -1,0 +1,293 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container my-3">
+    <div class="col-12 offset-0 my-5">
+        <!-- <div class="col-9 offset-0 my-5"> -->
+        <div class="card">
+            <div class="body-card">
+                <h1>Battery Chart Test</h1>
+                <hr>
+                <div>
+                    <canvas id="myChart"></canvas>
+                  </div>
+            </div>
+        </div>
+    </div>
+
+    <table class="table">
+        <thead>
+        <tr class="thead-dark">
+            <th>순번</th>
+            <th>Area</th>
+            <th>Rack</th>
+            <th>V37</th>
+            <th>V74</th>
+            <th>작성일시</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% if test_list %}
+        {% for testItem in test_list.items %}
+        <tr>
+            <td>{{ test_list.total - ((test_list.page-1) * test_list.per_page) - loop.index0 }}</td>
+            <!-- <td>{{ loop.index }}</td> -->
+            <td>{{ testItem.area }}</td>
+            <td>{{ testItem.rack }}</td>
+            <td>{{ testItem.v37 }}</td>
+            <td>{{ testItem.v74 }}</td>
+            <td>{{ testItem.create_date }}</td>
+        </tr>
+        {% endfor %}
+        {% else %}
+        <tr>
+            <td colspan="3">질문이 없습니다.</td>
+        </tr>
+        {% endif %}
+        </tbody>
+    </table>
+    <ul class="pagination justify-content-center">
+        {% if test_list.has_prev %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ test_list.prev_num }}">이전</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" tabindex="-1" aria-disabled="true" href="#">이전</a>
+        </li>
+        {% endif %}
+        {% for page_num in test_list.iter_pages() %}
+            {% if page_num %}
+                {% if page_num != test_list.page %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+                </li>
+                {% else %}
+                <li class="page-item active" aria-current="page">
+                    <a class="page-link" href="#">{{ page_num }}</a>
+                </li>
+                {% endif %}
+           {% else %}
+                <li class="disabled">
+                    <a class="page-link" href="#">...</a>
+                </li>
+           {% endif %}
+        {% endfor %}
+        {% if test_list.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ test_list.next_num }}">다음</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" tabindex="-1" aria-disabled="true" href="#">다음</a>
+        </li>
+        {% endif %}
+    </ul>
+    <!-- 페이징처리 끝 -->
+
+</div>
+
+<script src="{{ url_for('static', filename='chart.min.js') }}"></script>
+
+<script>
+
+    window.onload = init;
+    function init(){
+        console.log('-----------------------------------------------------')
+
+        var interval = setInterval(uttecRefresh, 2000);
+        uttecRefresh();
+    }
+
+    let myChart ;
+    var beforeDate = '';
+    var beforeLength = 0;
+
+    function uttecRefresh(){
+        // var url = "http://127.0.0.1:5100/test/getChart";
+        var url = "http://1.234.23.229:5100/test/getChart/";
+        console.log('^^^^^^^^^^^^^^^^^^^^^^^^ test ^^^^^^^^^^^^^^^^^^^^^^')
+        var request = new XMLHttpRequest();
+        request.open("GET", url);
+        request.onload = function() {
+            if (request.status == 200) { 
+                var test_mark = document.getElementById("test_mark");
+                var jsonData = request.responseText;
+                var array = JSON.parse(jsonData);
+                length = array.length;
+
+                nowData = array[0];
+                
+                for(var i=0; i<30; i++){
+                    console.log(array[i]);
+                }
+
+                var myData_0 = new Array();
+                var myData_1 = new Array();
+                var myData_2 = new Array();
+                var myData_3 = new Array();
+                var myData_4 = new Array();
+                var myData_5 = new Array();
+                var myData_6 = new Array();
+                var myData_7 = new Array();
+                var myData_8 = new Array();
+                var myData_9 = new Array();
+
+                var label_0 = new Array();
+                // var label_1 = new Array();
+                // var label_2 = new Array();
+
+                total = parseInt(length/3)
+                // step = parseInt(total/100)
+                var index = 0;
+                for(var i = 0; i < total; i++){
+                    if(array[index] == 0){
+                        myData_0.push(array[index + 1]);
+                        label_0.push(array[index + 2]);
+                    }
+                    else if(array[index] == 1){
+                        myData_1.push(array[index + 1]);
+                    }
+                    else if(array[index] == 2){
+                        myData_2.push(array[index + 1]);
+                    }
+                    else if(array[index] == 3){
+                        myData_3.push(array[index + 1]);
+                    }
+                    else if(array[index] == 4){
+                        myData_4.push(array[index + 1]);
+                    }
+                    else if(array[index] == 5){
+                        myData_5.push(array[index + 1]);
+                    }
+                    else if(array[index] == 6){
+                        myData_6.push(array[index + 1]);
+                    }
+                    else if(array[index] == 7){
+                        myData_7.push(array[index + 1]);
+                    }
+                    else if(array[index] == 8){
+                        myData_8.push(array[index + 1]);
+                    }
+                    else if(array[index] == 9){
+                        myData_9.push(array[index + 1]);
+                    }
+                    index += 3;
+                }
+
+                var data = {
+                    labels: label_0,
+                    datasets: [
+                    {
+                            label: 'rack0',
+                            data: myData_0,
+                            backgroundColor: 'rgb(255, 99, 132)',
+                            borderColor: 'red',
+                            borderWidth: 1,
+                       },
+                       {
+                            label: 'rack1',
+                            data: myData_1,
+                            backgroundColor: 'blue',
+                            borderColor: 'blue',
+                            borderWidth: 1,
+                       },
+                       {
+                            label: 'rack2',
+                            data: myData_2,
+                            backgroundColor: 'green',
+                            borderColor: 'green',
+                            borderWidth: 1,
+                       },
+                       {
+                            label: 'rack3',
+                            data: myData_3,
+                            backgroundColor: 'black',
+                            borderColor: 'black',
+                            borderWidth: 1,
+                       },
+                       {
+                            label: 'rack4',
+                            data: myData_5,
+                            backgroundColor: 'orange',
+                            borderColor: 'orange',
+                            borderWidth: 1,
+                       },
+                       {
+                            label: 'rack5',
+                            data: myData_5,
+                            backgroundColor: 'yellow',
+                            borderColor: 'yellow',
+                            borderWidth: 1,
+                       },
+                       {
+                            label: 'rack6',
+                            data: myData_6,
+                            backgroundColor: 'purple',
+                            borderColor: 'purple',
+                            borderWidth: 1,
+                       },
+                       {
+                            label: 'rack7',
+                            data: myData_7,
+                            backgroundColor: 'gray',
+                            borderColor: 'gray',
+                            borderWidth: 1,
+                       },
+                       {
+                            label: 'rack8',
+                            data: myData_8,
+                            backgroundColor: 'brown',
+                            borderColor: 'brown',
+                            borderWidth: 1,
+                       },
+                       {
+                            label: 'rack9',
+                            data: myData_9,
+                            backgroundColor: 'black',
+                            borderColor: 'black',
+                            borderWidth: 1,
+                       }
+                    ]
+                };
+
+                // const ctx = document.getElementById('myChart');
+                var config = {
+                    type: 'line',
+                    data: data,
+                    options: {
+                        // responsive: true,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Min and Max Settings'
+                            }
+                        },
+                        scales: {
+                            y: {
+                                min: 0,
+                                max: 100,
+                            }
+                        }
+                    }
+
+                };
+// beforeLength, length;
+                // if(beforeDate != array[0]){
+                //     beforeDate = array[0];
+            if(beforeLength != length){
+                beforeLength = length;
+                if(myChart !== undefined){
+                        myChart.destroy();
+                    }   
+                    myChart = new Chart(document.getElementById('myChart'), 
+                    config
+                    );
+                }
+
+            }
+        }
+    request.send(null);
+    }
+</script>
+
+{% endblock %}

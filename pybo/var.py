@@ -1,0 +1,2 @@
+
+connectionCountdown = 20

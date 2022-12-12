@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "../.."
+		},
+		{
+			"path": "../../../pybo_files"
+		},
+		{
+			"path": "../../../cloudServer"
+		}
+	],
+	"settings": {}
+}

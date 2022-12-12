@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}">
+    <!-- pybo CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Hello, pybo!</title>
+</head>
+<body>
+{% include "navbar.html" %}
+<!-- 기본 템플릿 안에 삽입될 내용 Start -->
+{% block content %}
+{% endblock %}
+<!-- 기본 템플릿 안에 삽입될 내용 End -->
+<!-- jQuery JS -->
+<script src="{{ url_for('static', filename='jquery-3.4.1.min.js') }}"></script>
+<!-- Bootstrap JS -->
+<script src="{{ url_for('static', filename='bootstrap.min.js') }}"></script>
+<script>
+    // window.onload = init;
+    var flag = false;
+
+    function init(){
+        console.log('!!!!!!!!!!!!!!!!           !!!!!!!!!!!');
+        var interval = setInterval(uttecRefresh1, 6000);
+        uttecRefresh1();
+    }
+
+    function uttecRefresh1(){
+        console.log('*************     ***************')
+        // var url = "http://127.0.0.1:5100/test/checkCon/";
+        var url = "http://1.234.23.229:5100/test/checkCon/";
+        var request = new XMLHttpRequest();
+        request.open("GET", url);
+        request.onload = function() {
+            if (request.status == 200) { 
+                var test_mark = document.getElementById("uttec-flag");
+                
+                test_mark.innerHTML = request.responseText;
+                if(request.responseText == 'Connected'){
+                    test_mark.style.color = 'blue'
+                    test_mark.style.background = 'white'
+                }
+                else{
+                    test_mark.style.color = 'white'
+                    test_mark.style.background = 'red'
+                }
+            }
+        }
+        request.send(null);
+
+    }
+    init();
+
+</script>
+</body>
+</html>
